@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Digital Invoice Maker</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: #f4f6f8;
+            padding: 20px;
+        }
+
+        .login-box {
+
+            width: 100%;
+            max-width: 420px;
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,0.10);
+
+        }
+
+        .logo {
+
+            text-align: center;
+
+            font-size: 42px;
+
+            margin-bottom: 5px;
+
+        }
+
+        h1 {
+
+            text-align: center;
+
+            margin: 0 0 8px;
+
+            font-size: 27px;
+
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #777;
+
+            margin-bottom: 28px;
+
+        }
+
+        .tabs {
+
+            display: flex;
+
+            margin-bottom: 22px;
+
+            background: #f1f3f5;
+
+            border-radius: 8px;
+
+            padding: 4px;
+
+        }
+
+        .tab {
+
+            width: 50%;
+
+            border: none;
+
+            background: transparent;
+
+            padding: 11px;
+
+            cursor: pointer;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+        }
+
+        .tab.active {
+
+            background: white;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+
+            font-weight: bold;
+
+        }
+
+        label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+        }
+
+        .input-group {
+
+            position: relative;
+
+            margin-bottom: 16px;
+
+        }
+
+        input {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            outline: none;
+
+        }
+
+        input:focus {
+
+            border-color: #007bff;
+
+        }
+
+        .password-input {
+
+            padding-right: 70px;
+
+        }
+
+        .show-password {
+
+            position: absolute;
+
+            right: 10px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #007bff;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+        }
+
+        .main-btn {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #007bff;
+
+            color: white;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+        }
+
+        .main-btn:hover {
+
+            background: #0069d9;
+
+        }
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin: 22px 0;
+
+            color: #999;
+
+            font-size: 13px;
+
+        }
+
+        .divider::before,
+        .divider::after {
+
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #ddd;
+
+        }
+
+        .guest-btn {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            background: white;
+
+            color: #222;
+
+            font-size: 15px;
+
+            cursor: pointer;
+
+        }
+
+        .guest-btn:hover {
+
+            background: #f7f7f7;
+
+        }
+
+        .message {
+
+            display: none;
+
+            margin-bottom: 15px;
+
+            padding: 11px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+        }
+
+        .error {
+
+            background: #fdecec;
+
+            color: #c62828;
+
+        }
+
+        .success {
+
+            background: #e9f7ef;
+
+            color: #198754;
+
+        }
+
+        .signup-only {
+
+            display: none;
+
+        }
+
+        .terms {
+
+            text-align: center;
+
+            margin-top: 20px;
+
+            font-size: 12px;
+
+            color: #888;
+
+            line-height: 1.5;
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-box">
+
+
+    <div class="logo">
+        🧾
+    </div>
+
+
+    <h1>
+        Digital Invoice Maker
+    </h1>
+
+
+    <div class="subtitle">
+        Create professional invoices easily
+    </div>
+
+
+    <!-- LOGIN / SIGNUP TABS -->
+
+    <div class="tabs">
+
+        <button
+            class="tab active"
+            id="loginTab"
+            onclick="showLogin()"
+        >
+            Login
+        </button>
+
+
+        <button
+            class="tab"
+            id="signupTab"
+            onclick="showSignup()"
+        >
+            Sign Up
+        </button>
+
+    </div>
+
+
+    <!-- MESSAGE -->
+
+    <div
+        id="message"
+        class="message"
+    ></div>
+
+
+    <!-- NAME - SIGNUP ONLY -->
+
+    <div
+        id="nameGroup"
+        class="signup-only"
+    >
+
+        <label>
+            Your Name
+        </label>
+
+        <div class="input-group">
+
+            <input
+                type="text"
+                id="name"
+                placeholder="Enter your name"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- EMAIL -->
+
+    <label>
+        Email
+    </label>
+
+    <div class="input-group">
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+        >
+
+    </div>
+
+
+    <!-- PASSWORD -->
+
+    <label>
+        Password
+    </label>
+
+    <div class="input-group">
+
+        <input
+            type="password"
+            id="password"
+            class="password-input"
+            placeholder="Enter password"
+        >
+
+        <button
+            type="button"
+            class="show-password"
+            onclick="togglePassword()"
+        >
+            Show
+        </button>
+
+    </div>
+
+
+    <!-- CONFIRM PASSWORD -->
+
+    <div
+        id="confirmGroup"
+        class="signup-only"
+    >
+
+        <label>
+            Confirm Password
+        </label>
+
+        <div class="input-group">
+
+            <input
+                type="password"
+                id="confirmPassword"
+                class="password-input"
+                placeholder="Confirm password"
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN BUTTON -->
+
+    <button
+        class="main-btn"
+        id="mainButton"
+        onclick="login()"
+    >
+        Login
+    </button>
+
+
+    <!-- DIVIDER -->
+
+    <div class="divider">
+        OR
+    </div>
+
+
+    <!-- GUEST -->
+
+    <button
+        class="guest-btn"
+        onclick="continueAsGuest()"
+    >
+        👤 Continue as Guest
+    </button>
+
+
+    <div class="terms">
+
+        By continuing, you agree to use
+        Digital Invoice Maker responsibly.
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+// ======================================
+// CURRENT MODE
+// ======================================
+
+let mode = "login";
+
+
+
+// ======================================
+// SHOW LOGIN
+// ======================================
+
+function showLogin() {
+
+    mode = "login";
+
+
+    document
+        .getElementById("loginTab")
+        .classList.add("active");
+
+
+    document
+        .getElementById("signupTab")
+        .classList.remove("active");
+
+
+    document
+        .querySelectorAll(".signup-only")
+        .forEach(function(element) {
+
+            element.style.display = "none";
+
+        });
+
+
+    document
+        .getElementById("mainButton")
+        .textContent = "Login";
+
+
+    clearMessage();
+
+}
+
+
+
+// ======================================
+// SHOW SIGNUP
+// ======================================
+
+function showSignup() {
+
+    mode = "signup";
+
+
+    document
+        .getElementById("signupTab")
+        .classList.add("active");
+
+
+    document
+        .getElementById("loginTab")
+        .classList.remove("active");
+
+
+    document
+        .querySelectorAll(".signup-only")
+        .forEach(function(element) {
+
+            element.style.display = "block";
+
+        });
+
+
+    document
+        .getElementById("mainButton")
+        .textContent = "Create Account";
+
+
+    clearMessage();
+
+}
+
+
+
+// ======================================
+// PASSWORD SHOW / HIDE
+// ======================================
+
+function togglePassword() {
+
+    const password =
+        document.getElementById("password");
+
+
+    const button =
+        document.querySelector(".show-password");
+
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+        button.textContent = "Hide";
+
+    } else {
+
+        password.type = "password";
+
+        button.textContent = "Show";
+
+    }
+
+}
+
+
+
+// ======================================
+// MESSAGE
+// ======================================
+
+function showMessage(text, type) {
+
+    const message =
+        document.getElementById("message");
+
+
+    message.textContent = text;
+
+    message.className =
+        "message " + type;
+
+    message.style.display = "block";
+
+}
+
+
+function clearMessage() {
+
+    const message =
+        document.getElementById("message");
+
+
+    message.style.display = "none";
+
+}
+
+
+
+// ======================================
+// SIGN UP
+// ======================================
+
+function signup() {
+
+    const name =
+        document
+        .getElementById("name")
+        .value
+        .trim();
+
+
+    const email =
+        document
+        .getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+
+    const confirmPassword =
+        document
+        .getElementById("confirmPassword")
+        .value;
+
+
+    if (name === "") {
+
+        showMessage(
+            "Please enter your name.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (email === "") {
+
+        showMessage(
+            "Please enter your email.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (password.length < 6) {
+
+        showMessage(
+            "Password must be at least 6 characters.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (password !== confirmPassword) {
+
+        showMessage(
+            "Passwords do not match.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    // DEMO ACCOUNT STORAGE
+    // Real secure authentication will be added later.
+
+    const user = {
+
+        name: name,
+
+        email: email,
+
+        password: password
+
+    };
+
+
+    localStorage.setItem(
+        "demoUser",
+        JSON.stringify(user)
+    );
+
+
+    showMessage(
+        "Account created! You can now login.",
+        "success"
+    );
+
+
+    setTimeout(function() {
+
+        showLogin();
+
+        document.getElementById("email").value =
+            email;
+
+    }, 1000);
+
+}
+
+
+
+// ======================================
+// LOGIN
+// ======================================
+
+function login() {
+
+    const email =
+        document
+        .getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+        document
+        .getElementById("password")
+        .value;
+
+
+    if (email === "") {
+
+        showMessage(
+            "Please enter your email.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (password === "") {
+
+        showMessage(
+            "Please enter your password.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const savedUser =
+        localStorage.getItem("demoUser");
+
+
+    if (!savedUser) {
+
+        showMessage(
+            "No account found. Please Sign Up first.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const user =
+        JSON.parse(savedUser);
+
+
+    if (
+        email === user.email &&
+        password === user.password
+    ) {
+
+
+        localStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+
+        localStorage.setItem(
+            "currentUser",
+            JSON.stringify(user)
+        );
+
+
+        showMessage(
+            "Login successful!",
+            "success"
+        );
+
+
+        setTimeout(function() {
+
+            window.location.href =
+                "index.html";
+
+        }, 700);
+
+
+    } else {
+
+        showMessage(
+            "Incorrect email or password.",
+            "error"
+        );
+
+    }
+
+}
+
+
+
+// ======================================
+// GUEST MODE
+// ======================================
+
+function continueAsGuest() {
+
+    localStorage.setItem(
+        "guestMode",
+        "true"
+    );
+
+
+    localStorage.removeItem(
+        "loggedIn"
+    );
+
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+
+// ======================================
+// BUTTON ACTION
+// ======================================
+
+document
+    .getElementById("mainButton")
+    .addEventListener(
+        "click",
+        function() {
+
+            if (mode === "signup") {
+
+                signup();
+
+            } else {
+
+                login();
+
+            }
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

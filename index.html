@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Digital Invoice Maker</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+
+        /* =========================
+           TOP BAR
+        ========================= */
+
+        .top-bar {
+
+            max-width: 900px;
+
+            margin: 0 auto 15px;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            position: relative;
+
+        }
+
+
+        /* PROFILE BUTTON */
+
+        .profile-button {
+
+            width: 46px;
+            height: 46px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: white;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.12);
+
+            cursor: pointer;
+
+            font-size: 23px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .profile-button:hover {
+
+            background: #f0f2f5;
+
+        }
+
+
+        /* PROFILE MENU */
+
+        .profile-menu {
+
+            display: none;
+
+            position: absolute;
+
+            top: 55px;
+
+            right: 0;
+
+            width: 250px;
+
+            background: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,0.15);
+
+            overflow: hidden;
+
+            z-index: 1000;
+
+        }
+
+
+        .profile-menu.show {
+
+            display: block;
+
+        }
+
+
+        .profile-header {
+
+            padding: 17px;
+
+            border-bottom: 1px solid #eee;
+
+        }
+
+
+        .profile-header strong {
+
+            display: block;
+
+            font-size: 16px;
+
+            margin-bottom: 4px;
+
+        }
+
+
+        .profile-header span {
+
+            color: #777;
+
+            font-size: 13px;
+
+            word-break: break-all;
+
+        }
+
+
+        .menu-item {
+
+            width: 100%;
+
+            border: none;
+
+            background: white;
+
+            padding: 13px 16px;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            margin: 0;
+
+            border-radius: 0;
+
+        }
+
+
+        .menu-item:hover {
+
+            background: #f5f6f8;
+
+        }
+
+
+        .menu-divider {
+
+            height: 1px;
+
+            background: #eee;
+
+        }
+
+
+        .logout-item {
+
+            color: #dc3545;
+
+        }
+
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+
+            max-width: 900px;
+
+            margin: auto;
+
+            background: white;
+
+            padding: 30px;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 5px 25px rgba(0,0,0,0.08);
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .section {
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .section h2 {
+
+            font-size: 18px;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 12px;
+
+            margin-bottom: 12px;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+        }
+
+
+        input:focus {
+
+            outline: none;
+
+            border-color: #007bff;
+
+        }
+
+
+        /* =========================
+           ITEMS
+        ========================= */
+
+        .item {
+
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr auto;
+
+            gap: 10px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .item input {
+
+            margin: 0;
+
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        button {
+
+            border: none;
+
+            padding: 12px 18px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            margin-top: 5px;
+
+        }
+
+
+        button:hover {
+
+            opacity: 0.9;
+
+        }
+
+
+        .save-btn {
+
+            background: #198754;
+
+            color: white;
+
+        }
+
+
+        .clear-btn {
+
+            background: #6c757d;
+
+            color: white;
+
+        }
+
+
+        .add-btn {
+
+            background: #222;
+
+            color: white;
+
+        }
+
+
+        .remove-btn {
+
+            background: #dc3545;
+
+            color: white;
+
+        }
+
+
+        .generate-btn {
+
+            width: 100%;
+
+            background: #007bff;
+
+            color: white;
+
+            font-size: 17px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .profile-buttons {
+
+            display: flex;
+
+            gap: 10px;
+
+        }
+
+
+        .saved-message {
+
+            display: none;
+
+            background: #e8f5e9;
+
+            color: #198754;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            margin-bottom: 12px;
+
+            font-size: 14px;
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width: 650px) {
+
+            body {
+
+                padding: 15px;
+
+            }
+
+
+            .container {
+
+                padding: 20px;
+
+            }
+
+
+            .item {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .profile-buttons {
+
+                flex-direction: column;
+
+            }
+
+
+            .save-btn,
+            .clear-btn {
+
+                width: 100%;
+
+            }
+
+
+            .profile-menu {
+
+                right: 0;
+
+                width: 230px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         PROFILE BUTTON
+    ========================= -->
+
+    <div class="top-bar">
+
+
+        <button
+            type="button"
+            class="profile-button"
+            id="profileButton"
+            onclick="toggleProfileMenu()"
+            title="Account"
+        >
+            👤
+        </button>
+
+
+        <div
+            class="profile-menu"
+            id="profileMenu"
+        >
+
+
+            <div class="profile-header">
+
+                <strong id="profileName">
+                    Guest User
+                </strong>
+
+                <span id="profileEmail">
+                    Guest Mode
+                </span>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="menu-item"
+                onclick="openProfile()"
+            >
+                👤 Your Profile
+            </button>
+
+
+            <button
+                type="button"
+                class="menu-item"
+                onclick="openHistory()"
+            >
+                🧾 Invoice History
+            </button>
+
+
+            <button
+                type="button"
+                class="menu-item"
+                onclick="newInvoice()"
+            >
+                ➕ New Invoice
+            </button>
+
+
+            <div class="menu-divider"></div>
+
+
+            <button
+                type="button"
+                class="menu-item"
+                onclick="switchAccount()"
+            >
+                🔄 Switch Account
+            </button>
+
+
+            <button
+                type="button"
+                class="menu-item logout-item"
+                onclick="signOut()"
+            >
+                🚪 Sign Out
+            </button>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         MAIN FORM
+    ========================= -->
+
+    <div class="container">
+
+
+        <h1>
+            🧾 Digital Invoice Maker
+        </h1>
+
+
+
+        <!-- BUSINESS DETAILS -->
+
+        <div class="section">
+
+
+            <h2>
+                Business Details
+            </h2>
+
+
+            <div
+                id="savedMessage"
+                class="saved-message"
+            >
+                ✓ Business details saved successfully
+            </div>
+
+
+            <input
+                type="text"
+                id="businessName"
+                placeholder="Business / Shop Name"
+            >
+
+
+            <input
+                type="text"
+                id="businessAddress"
+                placeholder="Business Address"
+            >
+
+
+            <input
+                type="text"
+                id="businessPhone"
+                placeholder="Phone Number"
+            >
+
+
+            <div class="profile-buttons">
+
+
+                <button
+                    type="button"
+                    class="save-btn"
+                    onclick="saveBusinessProfile()"
+                >
+                    💾 Save Business Details
+                </button>
+
+
+                <button
+                    type="button"
+                    class="clear-btn"
+                    onclick="clearBusinessProfile()"
+                >
+                    Clear Saved Details
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- CUSTOMER DETAILS -->
+
+        <div class="section">
+
+
+            <h2>
+                Customer Details
+            </h2>
+
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Customer Name"
+            >
+
+
+            <input
+                type="text"
+                id="customerPhone"
+                placeholder="Customer Phone"
+            >
+
+
+        </div>
+
+
+
+        <!-- ITEMS -->
+
+        <div class="section">
+
+
+            <h2>
+                Items
+            </h2>
+
+
+            <div id="items">
+
+
+                <div class="item">
+
+
+                    <input
+                        type="text"
+                        class="item-name"
+                        placeholder="Item Name"
+                    >
+
+
+                    <input
+                        type="number"
+                        class="item-qty"
+                        placeholder="Quantity"
+                        min="1"
+                    >
+
+
+                    <input
+                        type="number"
+                        class="item-price"
+                        placeholder="Price"
+                        min="0"
+                        step="0.01"
+                    >
+
+
+                    <button
+                        type="button"
+                        class="remove-btn"
+                        onclick="removeItem(this)"
+                    >
+                        X
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="button"
+                class="add-btn"
+                onclick="addItem()"
+            >
+                + Add Item
+            </button>
+
+
+        </div>
+
+
+
+        <!-- ADDITIONAL CHARGES -->
+
+        <div class="section">
+
+
+            <h2>
+                Additional Charges
+            </h2>
+
+
+            <input
+                type="number"
+                id="discount"
+                placeholder="Discount (%)"
+                min="0"
+                max="100"
+                step="0.01"
+            >
+
+
+            <input
+                type="number"
+                id="gst"
+                placeholder="GST (%)"
+                min="0"
+                step="0.01"
+            >
+
+
+        </div>
+
+
+
+        <!-- GENERATE -->
+
+        <button
+            type="button"
+            class="generate-btn"
+            onclick="generateInvoice()"
+        >
+            Generate Invoice
+        </button>
+
+
+    </div>
+
+
+
+<script>
+
+
+// ======================================
+// PROFILE MENU
+// ======================================
+
+function toggleProfileMenu() {
+
+    const menu =
+        document.getElementById(
+            "profileMenu"
+        );
+
+    menu.classList.toggle("show");
+
+}
+
+
+
+// ======================================
+// CLOSE MENU OUTSIDE
+// ======================================
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const menu =
+            document.getElementById(
+                "profileMenu"
+            );
+
+        const button =
+            document.getElementById(
+                "profileButton"
+            );
+
+
+        if (
+            !menu.contains(event.target) &&
+            !button.contains(event.target)
+        ) {
+
+            menu.classList.remove("show");
+
+        }
+
+    }
+);
+
+
+
+// ======================================
+// LOAD USER INFORMATION
+// ======================================
+
+function loadUserInformation() {
+
+    const currentUser =
+        localStorage.getItem(
+            "currentUser"
+        );
+
+
+    const guestMode =
+        localStorage.getItem(
+            "guestMode"
+        );
+
+
+    const profileName =
+        document.getElementById(
+            "profileName"
+        );
+
+
+    const profileEmail =
+        document.getElementById(
+            "profileEmail"
+        );
+
+
+    if (
+        currentUser &&
+        localStorage.getItem(
+            "loggedIn"
+        ) === "true"
+    ) {
+
+
+        try {
+
+            const user =
+                JSON.parse(
+                    currentUser
+                );
+
+
+            profileName.textContent =
+                user.name ||
+                "User";
+
+
+            profileEmail.textContent =
+                user.email ||
+                "";
+
+        }
+
+        catch(error) {
+
+            profileName.textContent =
+                "User";
+
+            profileEmail.textContent =
+                "";
+
+        }
+
+
+    }
+
+    else if (
+        guestMode === "true"
+    ) {
+
+        profileName.textContent =
+            "Guest User";
+
+        profileEmail.textContent =
+            "Guest Mode";
+
+    }
+
+    else {
+
+        profileName.textContent =
+            "Guest User";
+
+        profileEmail.textContent =
+            "Guest Mode";
+
+    }
+
+}
+
+
+
+// ======================================
+// YOUR PROFILE
+// ======================================
+
+function openProfile() {
+
+    window.location.href =
+        "profile.html";
+
+}
+
+
+
+// ======================================
+// INVOICE HISTORY
+// ======================================
+
+function openHistory() {
+
+    window.location.href =
+        "history.html";
+
+}
+
+
+
+// ======================================
+// NEW INVOICE
+// ======================================
+
+function newInvoice() {
+
+    document
+        .getElementById(
+            "profileMenu"
+        )
+        .classList.remove("show");
+
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+
+// ======================================
+// SWITCH ACCOUNT
+// ======================================
+
+function switchAccount() {
+
+    localStorage.removeItem(
+        "loggedIn"
+    );
+
+
+    localStorage.removeItem(
+        "guestMode"
+    );
+
+
+    localStorage.removeItem(
+        "currentUser"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+// ======================================
+// SIGN OUT
+// ======================================
+
+function signOut() {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to sign out?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        "loggedIn"
+    );
+
+
+    localStorage.removeItem(
+        "guestMode"
+    );
+
+
+    localStorage.removeItem(
+        "currentUser"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+// ======================================
+// LOAD BUSINESS PROFILE
+// ======================================
+
+function loadBusinessProfile() {
+
+    const savedProfile =
+        localStorage.getItem(
+            "businessProfile"
+        );
+
+
+    if (!savedProfile) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const profile =
+            JSON.parse(
+                savedProfile
+            );
+
+
+        document.getElementById(
+            "businessName"
+        ).value =
+            profile.name || "";
+
+
+        document.getElementById(
+            "businessAddress"
+        ).value =
+            profile.address || "";
+
+
+        document.getElementById(
+            "businessPhone"
+        ).value =
+            profile.phone || "";
+
+    }
+
+    catch(error) {
+
+        console.log(
+            "Could not load business profile."
+        );
+
+    }
+
+}
+
+
+
+// ======================================
+// SAVE BUSINESS PROFILE
+// ======================================
+
+function saveBusinessProfile() {
+
+    const name =
+        document
+        .getElementById(
+            "businessName"
+        )
+        .value
+        .trim();
+
+
+    const address =
+        document
+        .getElementById(
+            "businessAddress"
+        )
+        .value
+        .trim();
+
+
+    const phone =
+        document
+        .getElementById(
+            "businessPhone"
+        )
+        .value
+        .trim();
+
+
+    if (name === "") {
+
+        alert(
+            "Please enter Business / Shop Name."
+        );
+
+        return;
+
+    }
+
+
+    const profile = {
+
+        name: name,
+
+        address: address,
+
+        phone: phone
+
+    };
+
+
+    localStorage.setItem(
+        "businessProfile",
+        JSON.stringify(
+            profile
+        )
+    );
+
+
+    const message =
+        document.getElementById(
+            "savedMessage"
+        );
+
+
+    message.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            message.style.display =
+                "none";
+
+        },
+        2500
+    );
+
+}
+
+
+
+// ======================================
+// CLEAR BUSINESS PROFILE
+// ======================================
+
+function clearBusinessProfile() {
+
+    localStorage.removeItem(
+        "businessProfile"
+    );
+
+
+    document.getElementById(
+        "businessName"
+    ).value = "";
+
+
+    document.getElementById(
+        "businessAddress"
+    ).value = "";
+
+
+    document.getElementById(
+        "businessPhone"
+    ).value = "";
+
+}
+
+
+
+// ======================================
+// ADD ITEM
+// ======================================
+
+function addItem() {
+
+    const item =
+        document.createElement(
+            "div"
+        );
+
+
+    item.className =
+        "item";
+
+
+    item.innerHTML = `
+
+        <input
+            type="text"
+            class="item-name"
+            placeholder="Item Name"
+        >
+
+        <input
+            type="number"
+            class="item-qty"
+            placeholder="Quantity"
+            min="1"
+        >
+
+        <input
+            type="number"
+            class="item-price"
+            placeholder="Price"
+            min="0"
+            step="0.01"
+        >
+
+        <button
+            type="button"
+            class="remove-btn"
+            onclick="removeItem(this)"
+        >
+            X
+        </button>
+
+    `;
+
+
+    document
+        .getElementById("items")
+        .appendChild(item);
+
+}
+
+
+
+// ======================================
+// REMOVE ITEM
+// ======================================
+
+function removeItem(button) {
+
+    const items =
+        document.querySelectorAll(
+            ".item"
+        );
+
+
+    if (items.length > 1) {
+
+        button
+            .parentElement
+            .remove();
+
+    }
+
+}
+
+
+
+// ======================================
+// GENERATE INVOICE
+// ======================================
+
+function generateInvoice() {
+
+
+    const businessName =
+        document
+        .getElementById(
+            "businessName"
+        )
+        .value
+        .trim();
+
+
+    const businessAddress =
+        document
+        .getElementById(
+            "businessAddress"
+        )
+        .value
+        .trim();
+
+
+    const businessPhone =
+        document
+        .getElementById(
+            "businessPhone"
+        )
+        .value
+        .trim();
+
+
+    const customerName =
+        document
+        .getElementById(
+            "customerName"
+        )
+        .value
+        .trim();
+
+
+    const customerPhone =
+        document
+        .getElementById(
+            "customerPhone"
+        )
+        .value
+        .trim();
+
+
+    if (businessName === "") {
+
+        alert(
+            "Please enter Business / Shop Name."
+        );
+
+        return;
+
+    }
+
+
+    const itemElements =
+        document.querySelectorAll(
+            ".item"
+        );
+
+
+    const invoiceItems = [];
+
+
+    let subtotal = 0;
+
+
+    itemElements.forEach(
+        function(item) {
+
+
+            const name =
+                item
+                .querySelector(
+                    ".item-name"
+                )
+                .value
+                .trim();
+
+
+            const qty =
+                Number(
+                    item
+                    .querySelector(
+                        ".item-qty"
+                    )
+                    .value
+                ) || 0;
+
+
+            const price =
+                Number(
+                    item
+                    .querySelector(
+                        ".item-price"
+                    )
+                    .value
+                ) || 0;
+
+
+            if (
+                name !== "" &&
+                qty > 0 &&
+                price >= 0
+            ) {
+
+
+                const amount =
+                    qty * price;
+
+
+                subtotal +=
+                    amount;
+
+
+                invoiceItems.push({
+
+                    name:
+                        name,
+
+                    qty:
+                        qty,
+
+                    price:
+                        price,
+
+                    amount:
+                        amount
+
+                });
+
+            }
+
+        }
+    );
+
+
+    if (
+        invoiceItems.length === 0
+    ) {
+
+        alert(
+            "Please add at least one item."
+        );
+
+        return;
+
+    }
+
+
+    const discount =
+        Number(
+            document
+            .getElementById(
+                "discount"
+            )
+            .value
+        ) || 0;
+
+
+    const gst =
+        Number(
+            document
+            .getElementById(
+                "gst"
+            )
+            .value
+        ) || 0;
+
+
+    const discountAmount =
+        subtotal *
+        discount /
+        100;
+
+
+    const afterDiscount =
+        subtotal -
+        discountAmount;
+
+
+    const gstAmount =
+        afterDiscount *
+        gst /
+        100;
+
+
+    const total =
+        afterDiscount +
+        gstAmount;
+
+
+    const invoiceNumber =
+        "INV-" +
+        Date.now();
+
+
+    const invoiceDate =
+        new Date()
+        .toLocaleDateString(
+            "en-IN"
+        );
+
+
+    const invoiceData = {
+
+        invoiceNumber:
+            invoiceNumber,
+
+        date:
+            invoiceDate,
+
+        businessName:
+            businessName,
+
+        businessAddress:
+            businessAddress,
+
+        businessPhone:
+            businessPhone,
+
+        customerName:
+            customerName,
+
+        customerPhone:
+            customerPhone,
+
+        items:
+            invoiceItems,
+
+        subtotal:
+            subtotal,
+
+        discount:
+            discount,
+
+        discountAmount:
+            discountAmount,
+
+        gst:
+            gst,
+
+        gstAmount:
+            gstAmount,
+
+        total:
+            total
+
+    };
+
+
+    // SAVE CURRENT INVOICE
+
+    localStorage.setItem(
+        "invoiceData",
+        JSON.stringify(
+            invoiceData
+        )
+    );
+
+
+    // SAVE INVOICE HISTORY
+
+    let invoiceHistory =
+        JSON.parse(
+            localStorage.getItem(
+                "invoiceHistory"
+            )
+        ) || [];
+
+
+    invoiceHistory.unshift(
+        invoiceData
+    );
+
+
+    localStorage.setItem(
+        "invoiceHistory",
+        JSON.stringify(
+            invoiceHistory
+        )
+    );
+
+
+    // OPEN INVOICE PAGE
+
+    window.location.href =
+        "invoice.html";
+
+}
+
+
+
+// ======================================
+// START
+// ======================================
+
+loadBusinessProfile();
+
+loadUserInformation();
+
+
+</script>
+
+
+</body>
+
+</html>

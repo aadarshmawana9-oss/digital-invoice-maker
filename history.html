@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Invoice History</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+            padding: 25px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+            flex-wrap: wrap;
+
+            margin-bottom: 20px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .topbar p {
+            margin: 5px 0 0;
+            color: #777;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            padding: 11px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .new-btn {
+            background: #007bff;
+            color: white;
+        }
+
+        .home-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.88;
+        }
+
+        .history-box {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .history-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .history-header h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .count {
+            background: #eef4ff;
+            color: #007bff;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th {
+            background: #222;
+            color: white;
+            padding: 14px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #fafafa;
+        }
+
+        .amount {
+            font-weight: bold;
+        }
+
+        .view-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            margin-left: 5px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #777;
+        }
+
+        .empty-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .empty h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        @media(max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .topbar {
+                padding: 18px;
+            }
+
+            .buttons {
+                width: 100%;
+            }
+
+            .buttons button {
+                flex: 1;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div>
+
+            <h1>
+                🧾 Invoice History
+            </h1>
+
+            <p>
+                View your previously generated invoices
+            </p>
+
+        </div>
+
+
+        <div class="buttons">
+
+            <button
+                class="new-btn"
+                onclick="newInvoice()"
+            >
+                + New Invoice
+            </button>
+
+
+            <button
+                class="home-btn"
+                onclick="goHome()"
+            >
+                🏠 Home
+            </button>
+
+
+            <button
+                class="clear-btn"
+                onclick="clearHistory()"
+            >
+                🗑️ Clear History
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- HISTORY -->
+
+    <div class="history-box">
+
+
+        <div class="history-header">
+
+            <h2>
+                Your Invoices
+            </h2>
+
+            <span
+                class="count"
+                id="invoiceCount"
+            >
+                0 Invoices
+            </span>
+
+        </div>
+
+
+        <div
+            id="historyContent"
+        >
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+// ======================================
+// GET HISTORY
+// ======================================
+
+function getHistory() {
+
+    const history =
+        localStorage.getItem(
+            "invoiceHistory"
+        );
+
+
+    if (!history) {
+
+        return [];
+
+    }
+
+
+    try {
+
+        return JSON.parse(history);
+
+    } catch (error) {
+
+        return [];
+
+    }
+
+}
+
+
+
+// ======================================
+// DISPLAY HISTORY
+// ======================================
+
+function displayHistory() {
+
+    const history =
+        getHistory();
+
+
+    const content =
+        document.getElementById(
+            "historyContent"
+        );
+
+
+    const count =
+        document.getElementById(
+            "invoiceCount"
+        );
+
+
+    count.textContent =
+        history.length +
+        (
+            history.length === 1
+                ? " Invoice"
+                : " Invoices"
+        );
+
+
+    if (history.length === 0) {
+
+        content.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    🧾
+                </div>
+
+                <h3>
+                    No invoices yet
+                </h3>
+
+                <p>
+                    Create your first invoice
+                    to see it here.
+                </p>
+
+                <button
+                    class="new-btn"
+                    onclick="newInvoice()"
+                >
+                    Create Invoice
+                </button>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+
+    let html = `
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Invoice No.
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Items
+                        </th>
+
+                        <th>
+                            Total
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+    `;
+
+
+
+    history.forEach(function(invoice, index) {
+
+
+        const itemCount =
+            invoice.items
+                ? invoice.items.length
+                : 0;
+
+
+        html += `
+
+            <tr>
+
+                <td>
+                    <strong>
+                        ${escapeHTML(
+                            invoice.invoiceNumber || "-"
+                        )}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        invoice.date || "-"
+                    )}
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        invoice.customerName ||
+                        "Walk-in Customer"
+                    )}
+                </td>
+
+
+                <td>
+                    ${itemCount}
+                </td>
+
+
+                <td class="amount">
+                    ₹${Number(
+                        invoice.total || 0
+                    ).toFixed(2)}
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="view-btn"
+                        onclick="viewInvoice(${index})"
+                    >
+                        View
+                    </button>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteInvoice(${index})"
+                    >
+                        Delete
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+
+    html += `
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+
+    content.innerHTML = html;
+
+}
+
+
+
+// ======================================
+// VIEW INVOICE
+// ======================================
+
+function viewInvoice(index) {
+
+    const history =
+        getHistory();
+
+
+    if (!history[index]) {
+
+        return;
+
+    }
+
+
+    localStorage.setItem(
+        "invoiceData",
+        JSON.stringify(
+            history[index]
+        )
+    );
+
+
+    window.location.href =
+        "invoice.html";
+
+}
+
+
+
+// ======================================
+// DELETE ONE INVOICE
+// ======================================
+
+function deleteInvoice(index) {
+
+    const history =
+        getHistory();
+
+
+    if (!history[index]) {
+
+        return;
+
+    }
+
+
+    const invoiceNumber =
+        history[index].invoiceNumber ||
+        "this invoice";
+
+
+    const confirmed =
+        confirm(
+            "Delete " +
+            invoiceNumber +
+            "?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    history.splice(index, 1);
+
+
+    localStorage.setItem(
+        "invoiceHistory",
+        JSON.stringify(history)
+    );
+
+
+    displayHistory();
+
+}
+
+
+
+// ======================================
+// CLEAR ALL HISTORY
+// ======================================
+
+function clearHistory() {
+
+    const history =
+        getHistory();
+
+
+    if (history.length === 0) {
+
+        alert(
+            "Invoice history is already empty."
+        );
+
+        return;
+
+    }
+
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete ALL invoice history?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        "invoiceHistory"
+    );
+
+
+    displayHistory();
+
+}
+
+
+
+// ======================================
+// NEW INVOICE
+// ======================================
+
+function newInvoice() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+
+// ======================================
+// HOME
+// ======================================
+
+function goHome() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+
+// ======================================
+// SECURITY HELPER
+// ======================================
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+
+}
+
+
+
+// ======================================
+// START
+// ======================================
+
+displayHistory();
+
+
+</script>
+
+
+</body>
+
+</html>

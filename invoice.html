@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Invoice Preview</title>
+
+    <!-- PDF LIBRARIES -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #eef1f5;
+            color: #222;
+            padding: 20px;
+        }
+
+
+        /* =========================
+           TOOLBAR
+        ========================= */
+
+        .toolbar {
+            max-width: 1000px;
+            margin: 0 auto 18px;
+
+            background: white;
+            padding: 12px;
+
+            border-radius: 10px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            gap: 8px;
+            flex-wrap: wrap;
+
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+
+        .toolbar button,
+        .toolbar select {
+
+            border: none;
+
+            padding: 10px 14px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+        }
+
+
+        .toolbar button {
+
+            background: #222;
+            color: white;
+
+        }
+
+
+        .toolbar button:hover {
+
+            opacity: 0.85;
+
+        }
+
+
+        .back-btn {
+
+            background: #6c757d !important;
+
+        }
+
+
+        .print-btn {
+
+            background: #0d6efd !important;
+
+        }
+
+
+        .pdf-btn {
+
+            background: #dc3545 !important;
+
+        }
+
+
+        .template-select {
+
+            border: 1px solid #ddd !important;
+            background: white;
+            color: #222;
+
+        }
+
+
+        .zoom-label {
+
+            padding: 8px;
+
+            font-size: 14px;
+
+            color: #555;
+
+        }
+
+
+
+        /* =========================
+           PREVIEW AREA
+        ========================= */
+
+        .preview-area {
+
+            width: 100%;
+
+            overflow: auto;
+
+            display: flex;
+
+            justify-content: center;
+
+            padding: 20px;
+
+        }
+
+
+        .invoice-wrapper {
+
+            transform-origin: top center;
+
+            transition: transform 0.2s;
+
+        }
+
+
+
+        /* =========================
+           A4 INVOICE
+        ========================= */
+
+        .invoice {
+
+            width: 794px;
+
+            min-height: 1123px;
+
+            background: white;
+
+            padding: 50px;
+
+            box-shadow: 0 5px 30px rgba(0,0,0,0.12);
+
+            position: relative;
+
+        }
+
+
+
+        /* =========================
+           PROFESSIONAL TEMPLATE
+        ========================= */
+
+        .invoice.professional {
+
+            border-top: 8px solid #222;
+
+        }
+
+
+        .professional .invoice-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 30px;
+
+            padding-bottom: 25px;
+
+            border-bottom: 2px solid #222;
+
+        }
+
+
+        .professional .invoice-title {
+
+            text-align: right;
+
+        }
+
+
+        .professional .invoice-title h2 {
+
+            font-size: 34px;
+
+            margin: 0 0 10px;
+
+        }
+
+
+
+        /* =========================
+           MINIMAL TEMPLATE
+        ========================= */
+
+        .invoice.minimal {
+
+            border: 1px solid #ddd;
+
+        }
+
+
+        .minimal .invoice-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            padding-bottom: 20px;
+
+            border-bottom: 1px solid #ddd;
+
+        }
+
+
+        .minimal .invoice-title {
+
+            text-align: right;
+
+        }
+
+
+        .minimal .invoice-title h2 {
+
+            font-weight: normal;
+
+            font-size: 30px;
+
+            margin: 0 0 10px;
+
+        }
+
+
+
+        /* =========================
+           MODERN TEMPLATE
+        ========================= */
+
+        .invoice.modern {
+
+            border-radius: 15px;
+
+            border-left: 8px solid #222;
+
+        }
+
+
+        .modern .invoice-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 30px;
+
+            padding-bottom: 25px;
+
+        }
+
+
+        .modern .invoice-title {
+
+            text-align: right;
+
+        }
+
+
+        .modern .invoice-title h2 {
+
+            font-size: 38px;
+
+            margin: 0 0 10px;
+
+        }
+
+
+
+        /* =========================
+           BUSINESS HEADER
+        ========================= */
+
+        .business h1 {
+
+            margin: 0 0 10px;
+
+            font-size: 30px;
+
+        }
+
+
+        .business p {
+
+            margin: 5px 0;
+
+            color: #666;
+
+        }
+
+
+        .invoice-title p {
+
+            margin: 5px 0;
+
+            color: #666;
+
+        }
+
+
+
+        /* =========================
+           CUSTOMER
+        ========================= */
+
+        .customer-section {
+
+            margin-top: 30px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .customer-section h3 {
+
+            margin: 0 0 10px;
+
+            font-size: 16px;
+
+        }
+
+
+        .customer-section p {
+
+            margin: 5px 0;
+
+            color: #555;
+
+        }
+
+
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 20px;
+
+        }
+
+
+        th {
+
+            background: #222;
+
+            color: white;
+
+            padding: 13px;
+
+            text-align: left;
+
+        }
+
+
+        td {
+
+            padding: 13px;
+
+            border-bottom: 1px solid #ddd;
+
+        }
+
+
+        th:nth-child(2),
+        th:nth-child(3),
+        th:nth-child(4),
+
+        td:nth-child(2),
+        td:nth-child(3),
+        td:nth-child(4) {
+
+            text-align: right;
+
+        }
+
+
+
+        /* =========================
+           TOTALS
+        ========================= */
+
+        .totals {
+
+            width: 350px;
+
+            max-width: 100%;
+
+            margin-left: auto;
+
+            margin-top: 30px;
+
+        }
+
+
+        .total-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 9px 0;
+
+            border-bottom: 1px solid #eee;
+
+        }
+
+
+        .grand-total {
+
+            font-size: 21px;
+
+            font-weight: bold;
+
+            border-top: 2px solid #222;
+
+            border-bottom: none;
+
+            padding-top: 15px;
+
+            margin-top: 5px;
+
+        }
+
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 65px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #ddd;
+
+            color: #777;
+
+            font-size: 13px;
+
+        }
+
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width: 650px) {
+
+            body {
+
+                padding: 10px;
+
+            }
+
+
+            .preview-area {
+
+                justify-content: flex-start;
+
+            }
+
+
+            .invoice {
+
+                width: 794px;
+
+            }
+
+        }
+
+
+
+        /* =========================
+           PRINT
+        ========================= */
+
+        @media print {
+
+            body {
+
+                background: white;
+
+                padding: 0;
+
+            }
+
+
+            .toolbar {
+
+                display: none;
+
+            }
+
+
+            .preview-area {
+
+                padding: 0;
+
+                overflow: visible;
+
+            }
+
+
+            .invoice {
+
+                box-shadow: none;
+
+                border-radius: 0;
+
+                transform: none !important;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         TOOLBAR
+    ========================= -->
+
+    <div class="toolbar">
+
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Edit Invoice
+        </button>
+
+
+        <span class="zoom-label">
+            Zoom:
+        </span>
+
+
+        <button onclick="zoomOut()">
+            −
+        </button>
+
+
+        <button onclick="resetZoom()">
+            100%
+        </button>
+
+
+        <button onclick="zoomIn()">
+            +
+        </button>
+
+
+        <select
+            id="templateSelect"
+            class="template-select"
+            onchange="changeTemplate()"
+        >
+
+            <option value="professional">
+                Professional
+            </option>
+
+            <option value="minimal">
+                Minimal
+            </option>
+
+            <option value="modern">
+                Modern
+            </option>
+
+        </select>
+
+
+        <button
+            class="print-btn"
+            onclick="printInvoice()"
+        >
+            🖨️ Print
+        </button>
+
+
+        <button
+            class="pdf-btn"
+            onclick="downloadPDF()"
+        >
+            ⬇️ Download PDF
+        </button>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         PREVIEW
+    ========================= -->
+
+    <div class="preview-area">
+
+
+        <div
+            class="invoice-wrapper"
+            id="invoiceWrapper"
+        >
+
+
+            <div
+                class="invoice professional"
+                id="invoice"
+            >
+
+
+                <!-- HEADER -->
+
+                <div class="invoice-header">
+
+
+                    <div class="business">
+
+                        <h1 id="businessName">
+                            Business Name
+                        </h1>
+
+
+                        <p id="businessAddress"></p>
+
+
+                        <p id="businessPhone"></p>
+
+                    </div>
+
+
+
+                    <div class="invoice-title">
+
+                        <h2>
+                            INVOICE
+                        </h2>
+
+
+                        <p>
+                            Invoice No:
+                            <strong id="invoiceNumber"></strong>
+                        </p>
+
+
+                        <p>
+                            Date:
+                            <strong id="invoiceDate"></strong>
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- CUSTOMER -->
+
+                <div class="customer-section">
+
+
+                    <h3>
+                        BILL TO
+                    </h3>
+
+
+                    <p>
+                        <strong id="customerName"></strong>
+                    </p>
+
+
+                    <p id="customerPhone"></p>
+
+
+                </div>
+
+
+
+                <!-- ITEMS -->
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Item
+                            </th>
+
+                            <th>
+                                Qty
+                            </th>
+
+                            <th>
+                                Price
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="itemsTable">
+
+                    </tbody>
+
+
+                </table>
+
+
+
+                <!-- TOTALS -->
+
+                <div class="totals">
+
+
+                    <div class="total-row">
+
+                        <span>
+                            Subtotal
+                        </span>
+
+                        <strong id="subtotal"></strong>
+
+                    </div>
+
+
+
+                    <div class="total-row">
+
+                        <span>
+                            Discount
+                            (<span id="discountPercent"></span>%)
+                        </span>
+
+                        <strong id="discountAmount"></strong>
+
+                    </div>
+
+
+
+                    <div class="total-row">
+
+                        <span>
+                            GST
+                            (<span id="gstPercent"></span>%)
+                        </span>
+
+                        <strong id="gstAmount"></strong>
+
+                    </div>
+
+
+
+                    <div class="total-row grand-total">
+
+                        <span>
+                            Grand Total
+                        </span>
+
+                        <strong id="total"></strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- FOOTER -->
+
+                <div class="footer">
+
+                    Thank you for your business!
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+
+        // =========================
+        // GET DATA
+        // =========================
+
+        const savedData =
+            localStorage.getItem("invoiceData");
+
+
+        if (!savedData) {
+
+            alert(
+                "No invoice data found."
+            );
+
+            window.location.href =
+                "index.html";
+
+        }
+
+
+        const data =
+            JSON.parse(savedData);
+
+
+
+        // =========================
+        // CURRENCY
+        // =========================
+
+        function money(value) {
+
+            return "₹" +
+                Number(value).toFixed(2);
+
+        }
+
+
+
+        // =========================
+        // BASIC DETAILS
+        // =========================
+
+        document.getElementById(
+            "businessName"
+        ).textContent =
+            data.businessName ||
+            "Business Name";
+
+
+        document.getElementById(
+            "businessAddress"
+        ).textContent =
+            data.businessAddress ||
+            "";
+
+
+        document.getElementById(
+            "businessPhone"
+        ).textContent =
+            data.businessPhone ||
+            "";
+
+
+        document.getElementById(
+            "invoiceNumber"
+        ).textContent =
+            data.invoiceNumber ||
+            "";
+
+
+        document.getElementById(
+            "invoiceDate"
+        ).textContent =
+            data.date ||
+            "";
+
+
+        document.getElementById(
+            "customerName"
+        ).textContent =
+            data.customerName ||
+            "Customer";
+
+
+        document.getElementById(
+            "customerPhone"
+        ).textContent =
+            data.customerPhone ||
+            "";
+
+
+
+        // =========================
+        // ITEMS
+        // =========================
+
+        const table =
+            document.getElementById(
+                "itemsTable"
+            );
+
+
+        data.items.forEach(function(item) {
+
+
+            const row =
+                document.createElement("tr");
+
+
+            const nameCell =
+                document.createElement("td");
+
+
+            nameCell.textContent =
+                item.name;
+
+
+            const qtyCell =
+                document.createElement("td");
+
+
+            qtyCell.textContent =
+                item.qty;
+
+
+            const priceCell =
+                document.createElement("td");
+
+
+            priceCell.textContent =
+                money(item.price);
+
+
+            const amountCell =
+                document.createElement("td");
+
+
+            amountCell.textContent =
+                money(item.amount);
+
+
+            row.appendChild(nameCell);
+
+            row.appendChild(qtyCell);
+
+            row.appendChild(priceCell);
+
+            row.appendChild(amountCell);
+
+
+            table.appendChild(row);
+
+        });
+
+
+
+        // =========================
+        // TOTALS
+        // =========================
+
+        document.getElementById(
+            "subtotal"
+        ).textContent =
+            money(data.subtotal);
+
+
+        document.getElementById(
+            "discountPercent"
+        ).textContent =
+            data.discount;
+
+
+        document.getElementById(
+            "discountAmount"
+        ).textContent =
+            money(data.discountAmount);
+
+
+        document.getElementById(
+            "gstPercent"
+        ).textContent =
+            data.gst;
+
+
+        document.getElementById(
+            "gstAmount"
+        ).textContent =
+            money(data.gstAmount);
+
+
+        document.getElementById(
+            "total"
+        ).textContent =
+            money(data.total);
+
+
+
+        // =========================
+        // ZOOM
+        // =========================
+
+        let zoom = 1;
+
+
+        function updateZoom() {
+
+            document.getElementById(
+                "invoiceWrapper"
+            ).style.transform =
+                `scale(${zoom})`;
+
+        }
+
+
+        function zoomIn() {
+
+            zoom += 0.1;
+
+
+            if (zoom > 2) {
+
+                zoom = 2;
+
+            }
+
+
+            updateZoom();
+
+        }
+
+
+        function zoomOut() {
+
+            zoom -= 0.1;
+
+
+            if (zoom < 0.5) {
+
+                zoom = 0.5;
+
+            }
+
+
+            updateZoom();
+
+        }
+
+
+        function resetZoom() {
+
+            zoom = 1;
+
+            updateZoom();
+
+        }
+
+
+
+        // =========================
+        // TEMPLATE
+        // =========================
+
+        function changeTemplate() {
+
+            const template =
+                document.getElementById(
+                    "templateSelect"
+                ).value;
+
+
+            const invoice =
+                document.getElementById(
+                    "invoice"
+                );
+
+
+            invoice.classList.remove(
+                "professional",
+                "minimal",
+                "modern"
+            );
+
+
+            invoice.classList.add(
+                template
+            );
+
+        }
+
+
+
+        // =========================
+        // PRINT
+        // =========================
+
+        function printInvoice() {
+
+            window.print();
+
+        }
+
+
+
+        // =========================
+        // BACK
+        // =========================
+
+        function goBack() {
+
+            window.location.href =
+                "index.html";
+
+        }
+
+
+
+        // =========================
+        // DOWNLOAD PDF
+        // =========================
+
+        async function downloadPDF() {
+
+
+            const button =
+                document.querySelector(
+                    ".pdf-btn"
+                );
+
+
+            button.textContent =
+                "Creating PDF...";
+
+
+            try {
+
+
+                const invoice =
+                    document.getElementById(
+                        "invoice"
+                    );
+
+
+                const canvas =
+                    await html2canvas(
+                        invoice,
+                        {
+                            scale: 2,
+                            backgroundColor:
+                                "#ffffff"
+                        }
+                    );
+
+
+                const imgData =
+                    canvas.toDataURL(
+                        "image/png"
+                    );
+
+
+                const {
+                    jsPDF
+                } =
+                    window.jspdf;
+
+
+                const pdf =
+                    new jsPDF(
+                        "p",
+                        "mm",
+                        "a4"
+                    );
+
+
+                const pageWidth =
+                    pdf.internal.pageSize
+                    .getWidth();
+
+
+                const pageHeight =
+                    pdf.internal.pageSize
+                    .getHeight();
+
+
+                const margin = 10;
+
+
+                const availableWidth =
+                    pageWidth -
+                    margin * 2;
+
+
+                const imgHeight =
+                    canvas.height *
+                    availableWidth /
+                    canvas.width;
+
+
+                pdf.addImage(
+                    imgData,
+                    "PNG",
+                    margin,
+                    margin,
+                    availableWidth,
+                    Math.min(
+                        imgHeight,
+                        pageHeight - margin * 2
+                    )
+                );
+
+
+                pdf.save(
+                    (
+                        data.invoiceNumber ||
+                        "invoice"
+                    ) +
+                    ".pdf"
+                );
+
+
+            } catch (error) {
+
+
+                console.error(error);
+
+
+                alert(
+                    "PDF download failed. Please try again."
+                );
+
+            }
+
+
+            button.textContent =
+                "⬇️ Download PDF";
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>

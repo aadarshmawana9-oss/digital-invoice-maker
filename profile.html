@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Your Profile - Digital Invoice Maker</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: auto;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .back-btn {
+            border: none;
+            background: #6c757d;
+            color: white;
+            padding: 11px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .avatar-area {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            margin: auto;
+        }
+
+        .avatar-area h2 {
+            margin: 12px 0 5px;
+        }
+
+        .mode {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .save-btn {
+            width: 100%;
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .danger-btn {
+            width: 100%;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .success {
+            display: none;
+            background: #e8f5e9;
+            color: #198754;
+            padding: 11px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .info {
+            background: #f1f6ff;
+            color: #245;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        @media(max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .topbar h1 {
+                font-size: 21px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="topbar">
+
+        <h1>
+            👤 Your Profile
+        </h1>
+
+        <button
+            class="back-btn"
+            onclick="goBack()"
+        >
+            ← Back
+        </button>
+
+    </div>
+
+
+    <!-- ACCOUNT -->
+
+    <div class="card">
+
+        <div class="avatar-area">
+
+            <div
+                class="avatar"
+                id="avatar"
+            >
+                👤
+            </div>
+
+            <h2 id="displayName">
+                Guest User
+            </h2>
+
+            <div
+                class="mode"
+                id="displayEmail"
+            >
+                Guest Mode
+            </div>
+
+        </div>
+
+
+        <h3 class="section-title">
+            Account Information
+        </h3>
+
+
+        <div
+            id="successMessage"
+            class="success"
+        >
+            ✓ Profile updated successfully
+        </div>
+
+
+        <label>
+            Name
+        </label>
+
+        <input
+            type="text"
+            id="userName"
+            placeholder="Enter your name"
+        >
+
+
+        <label>
+            Email
+        </label>
+
+        <input
+            type="email"
+            id="userEmail"
+            placeholder="Enter your email"
+        >
+
+
+        <button
+            class="save-btn"
+            onclick="saveProfile()"
+        >
+            💾 Save Profile
+        </button>
+
+    </div>
+
+
+    <!-- BUSINESS -->
+
+    <div class="card">
+
+        <h3 class="section-title">
+            🏪 Business Information
+        </h3>
+
+
+        <label>
+            Business / Shop Name
+        </label>
+
+        <input
+            type="text"
+            id="businessName"
+            placeholder="Business name"
+        >
+
+
+        <label>
+            Business Address
+        </label>
+
+        <input
+            type="text"
+            id="businessAddress"
+            placeholder="Business address"
+        >
+
+
+        <label>
+            Phone Number
+        </label>
+
+        <input
+            type="text"
+            id="businessPhone"
+            placeholder="Phone number"
+        >
+
+
+        <button
+            class="save-btn"
+            onclick="saveBusiness()"
+        >
+            💾 Save Business Details
+        </button>
+
+    </div>
+
+
+    <!-- ACCOUNT STATUS -->
+
+    <div class="card">
+
+        <h3 class="section-title">
+            Account
+        </h3>
+
+
+        <div
+            class="info"
+            id="accountInfo"
+        >
+            You are currently using Guest Mode.
+        </div>
+
+        <br>
+
+
+        <button
+            class="danger-btn"
+            onclick="signOut()"
+        >
+            🚪 Sign Out
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+
+// ======================================
+// LOAD PROFILE
+// ======================================
+
+function loadProfile() {
+
+    const currentUser =
+        localStorage.getItem("currentUser");
+
+    const guestMode =
+        localStorage.getItem("guestMode");
+
+
+    if (
+        currentUser &&
+        localStorage.getItem("loggedIn") === "true"
+    ) {
+
+        try {
+
+            const user =
+                JSON.parse(currentUser);
+
+
+            document.getElementById(
+                "userName"
+            ).value =
+                user.name || "";
+
+
+            document.getElementById(
+                "userEmail"
+            ).value =
+                user.email || "";
+
+
+            document.getElementById(
+                "displayName"
+            ).textContent =
+                user.name || "User";
+
+
+            document.getElementById(
+                "displayEmail"
+            ).textContent =
+                user.email || "";
+
+
+            document.getElementById(
+                "accountInfo"
+            ).textContent =
+                "✓ You are logged in with an account.";
+
+        }
+
+        catch(error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+    else {
+
+        document.getElementById(
+            "userName"
+        ).value = "Guest User";
+
+
+        document.getElementById(
+            "userEmail"
+        ).value = "";
+
+
+        document.getElementById(
+            "displayName"
+        ).textContent =
+            "Guest User";
+
+
+        document.getElementById(
+            "displayEmail"
+        ).textContent =
+            "Guest Mode";
+
+
+        document.getElementById(
+            "accountInfo"
+        ).textContent =
+            "You are currently using Guest Mode. Create an account later to use cloud features.";
+
+    }
+
+
+    loadBusiness();
+
+}
+
+
+
+// ======================================
+// SAVE PROFILE
+// ======================================
+
+function saveProfile() {
+
+    const name =
+        document
+        .getElementById("userName")
+        .value
+        .trim();
+
+
+    const email =
+        document
+        .getElementById("userEmail")
+        .value
+        .trim();
+
+
+    if (name === "") {
+
+        alert(
+            "Please enter your name."
+        );
+
+        return;
+
+    }
+
+
+    const currentUser =
+        localStorage.getItem(
+            "currentUser"
+        );
+
+
+    if (
+        currentUser &&
+        localStorage.getItem("loggedIn") === "true"
+    ) {
+
+        try {
+
+            const user =
+                JSON.parse(currentUser);
+
+
+            user.name = name;
+
+            user.email = email;
+
+
+            localStorage.setItem(
+                "currentUser",
+                JSON.stringify(user)
+            );
+
+
+            document.getElementById(
+                "displayName"
+            ).textContent =
+                name;
+
+
+            document.getElementById(
+                "displayEmail"
+            ).textContent =
+                email;
+
+
+        }
+
+        catch(error) {
+
+            console.log(error);
+
+        }
+
+    }
+
+
+    showSuccess();
+
+}
+
+
+
+// ======================================
+// SAVE BUSINESS
+// ======================================
+
+function saveBusiness() {
+
+    const name =
+        document
+        .getElementById("businessName")
+        .value
+        .trim();
+
+
+    const address =
+        document
+        .getElementById("businessAddress")
+        .value
+        .trim();
+
+
+    const phone =
+        document
+        .getElementById("businessPhone")
+        .value
+        .trim();
+
+
+    if (name === "") {
+
+        alert(
+            "Please enter Business / Shop Name."
+        );
+
+        return;
+
+    }
+
+
+    const business = {
+
+        name: name,
+
+        address: address,
+
+        phone: phone
+
+    };
+
+
+    localStorage.setItem(
+        "businessProfile",
+        JSON.stringify(business)
+    );
+
+
+    showSuccess();
+
+}
+
+
+
+// ======================================
+// LOAD BUSINESS
+// ======================================
+
+function loadBusiness() {
+
+    const saved =
+        localStorage.getItem(
+            "businessProfile"
+        );
+
+
+    if (!saved) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const business =
+            JSON.parse(saved);
+
+
+        document.getElementById(
+            "businessName"
+        ).value =
+            business.name || "";
+
+
+        document.getElementById(
+            "businessAddress"
+        ).value =
+            business.address || "";
+
+
+        document.getElementById(
+            "businessPhone"
+        ).value =
+            business.phone || "";
+
+    }
+
+    catch(error) {
+
+        console.log(error);
+
+    }
+
+}
+
+
+
+// ======================================
+// SUCCESS MESSAGE
+// ======================================
+
+function showSuccess() {
+
+    const message =
+        document.getElementById(
+            "successMessage"
+        );
+
+
+    message.style.display =
+        "block";
+
+
+    setTimeout(
+        function() {
+
+            message.style.display =
+                "none";
+
+        },
+        2500
+    );
+
+}
+
+
+
+// ======================================
+// BACK
+// ======================================
+
+function goBack() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+
+// ======================================
+// SIGN OUT
+// ======================================
+
+function signOut() {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to sign out?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    localStorage.removeItem(
+        "loggedIn"
+    );
+
+
+    localStorage.removeItem(
+        "guestMode"
+    );
+
+
+    localStorage.removeItem(
+        "currentUser"
+    );
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+
+
+// ======================================
+// START
+// ======================================
+
+loadProfile();
+
+</script>
+
+</body>
+
+</html>
